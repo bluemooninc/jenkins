@@ -21,22 +21,18 @@ RUN yum -y install vim git
 RUN yum -y install passwd openssh openssh-server openssh-clients sudo
 
 # Set up SSH
+RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+RUN sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
+RUN /etc/init.d/sshd start
+RUN /etc/init.d/sshd stop
+RUN echo 'root:docker' |chpasswd
+RUN useradd docker
+RUN echo 'docker:docker' |chpasswd
+RUN echo "docker    ALL=(ALL)       ALL" >> /etc/sudoers.d/docker
 RUN mkdir -p /home/docker/.ssh; chown docker /home/docker/.ssh; chmod 700 /home/docker/.ssh
 ADD id_rsa.pub /home/docker/.ssh/authorized_keys
 RUN chown docker /home/docker/.ssh/authorized_keys
 RUN chmod 600 /home/docker/.ssh/authorized_keys
-
-# Setup sudoers
-RUN echo "docker ALL=(ALL) ALL" >> /etc/sudoers.d/docker
-
-# Set up SSHD config
-RUN sed -ri 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
-RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
-RUN sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
-
-# Init SSHD
-RUN /etc/init.d/sshd start
-RUN /etc/init.d/sshd stop
 
 #  Python Supervisord  
 RUN yum -y install python-setuptools
