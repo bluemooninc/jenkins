@@ -3,13 +3,13 @@ MAINTAINER Yoshi Sakai <info@bluemooninc.jp>
 ENV LANG ja_JP.UTF-8
 
 # install inet tools
-RUN yum -y install curl ntp unzip wget 
+RUN yum update -y
+RUN yum -y install curl ntp unzip wget git
 
 # Time Zone
-RUN echo 'ZONE="Asia/Tokyo"' > /etc/sysconfig/clock
-RUN rm -f /etc/localtime
-RUN ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
-RUN ntpdate ntp.nict.jp
+RUN echo ZONE="Asia/Tokyo" > /etc/sysconfig/clock
+RUN echo UTC="false" >> /etc/sysconfig/clock
+RUN source /etc/sysconfig/clock
 
 # Add RPM
 RUN wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
