@@ -1,12 +1,12 @@
 FROM centos:centos6
 MAINTAINER Yoshi Sakai <info@bluemooninc.jp>
-ENV LANG ja_JP.UTF-8
 
 # install inet tools
 RUN yum update -y
 RUN yum -y install curl ntp unzip wget git
 
 # Time Zone
+ENV LANG="ja_JP.UTF-8:jp"
 RUN echo ZONE="Asia/Tokyo" > /etc/sysconfig/clock
 RUN echo UTC="false" >> /etc/sysconfig/clock
 RUN source /etc/sysconfig/clock
