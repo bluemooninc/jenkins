@@ -16,8 +16,9 @@ RUN wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenki
 RUN rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
 
 # install services
+RUN yum -y install java-1.7.0-openjdk
 RUN yum -y install jenkins
-RUN yum -y install vim git
+RUN yum -y install vim
 RUN yum -y install passwd openssh openssh-server openssh-clients sudo
 
 # Set up SSH
