@@ -2,21 +2,23 @@ FROM centos:centos6
 MAINTAINER Yoshi Sakai <info@bluemooninc.jp>
 ENV LANG ja_JP.UTF-8
 
-# Add RPM
-RUN wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
-RUN rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
-
-# install packages
-RUN yum -y install vim git
-RUN yum -y install passwd openssh openssh-server openssh-clients sudo
+# install inet tools
 RUN yum -y install curl ntp unzip wget 
-RUN yum -y install jenkins
 
 # Time Zone
 RUN echo 'ZONE="Asia/Tokyo"' > /etc/sysconfig/clock
 RUN rm -f /etc/localtime
 RUN ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN ntpdate ntp.nict.jp
+
+# Add RPM
+RUN wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+RUN rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+
+# install services
+RUN yum -y install jenkins
+RUN yum -y install vim git
+RUN yum -y install passwd openssh openssh-server openssh-clients sudo
 
 # Set up SSH
 RUN mkdir -p /home/docker/.ssh; chown docker /home/docker/.ssh; chmod 700 /home/docker/.ssh
